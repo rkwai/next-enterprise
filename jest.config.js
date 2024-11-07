@@ -9,6 +9,9 @@ const customJestConfig = {
   testEnvironment: "jest-environment-jsdom",
   modulePathIgnorePatterns: ["<rootDir>/dist/"],
   testPathIgnorePatterns: ["<rootDir>/e2e"],
+  moduleNameMapper: {
+    '^@tiptap/(.*)$': '<rootDir>/__mocks__/@tiptap/$1',
+  },
 }
 
 module.exports = createJestConfig(customJestConfig)
