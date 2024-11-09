@@ -9,9 +9,10 @@ interface StoryPreviewProps {
     type: string
   }>
   className?: string
+  layout?: 'default' | 'publication'
 }
 
-export function StoryPreview({ content, elements, className }: StoryPreviewProps) {
+export function StoryPreview({ content, elements, className, layout }: StoryPreviewProps) {
   return (
     <div className={twMerge('w-full', className)} data-testid="story-preview">
       <div className="rounded border p-6">

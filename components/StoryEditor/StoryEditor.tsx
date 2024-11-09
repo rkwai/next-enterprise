@@ -5,6 +5,7 @@ interface StoryEditorProps {
   initialContent?: string
   onContentChange?: (content: string) => void
   className?: string
+  showUndoRedo?: boolean
 }
 
 export const StoryEditor: React.FC<StoryEditorProps> = ({ initialContent = '', onContentChange, className }) => {

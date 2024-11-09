@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { twMerge } from 'tailwind-merge'
 
 interface AIGenerationProps {
@@ -9,24 +9,32 @@ interface AIGenerationProps {
     elements: string[]
   }) => Promise<string>
   className?: string
+  initialData?: {
+    title: string;
+    direction: string;
+    genre: string;
+    elements: string[];
+  };
+  onError?: (error: Error) => void;
 }
 
-export function AIGeneration({ onGenerate, className }: AIGenerationProps) {
-  const [title, setTitle] = useState('')
-  const [direction, setDirection] = useState('')
-  const [genre, setGenre] = useState('')
+export function AIGeneration({ onGenerate, className, initialData, onError }: AIGenerationProps) {
+  const [title, setTitle] = useState(initialData?.title || '')
+  const [direction, setDirection] = useState(initialData?.direction || '')
+  const [genre, setGenre] = useState(initialData?.genre || '')
   const [isGenerating, setIsGenerating] = useState(false)
 
-  const handleGenerate = async () => {
+  const handleGenerate = useCallback(async () => {
     setIsGenerating(true)
     try {
       await onGenerate({ title, direction, genre, elements: [] })
     } catch (error) {
       console.error('Generation failed:', error)
+      onError?.(error instanceof Error ? error : new Error('Generation failed'))
     } finally {
       setIsGenerating(false)
     }
-  }
+  }, [title, direction, genre, onGenerate, onError])
 
   return (
     <div className={twMerge('w-full', className)} data-testid="ai-generation">

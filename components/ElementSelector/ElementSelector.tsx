@@ -11,11 +11,13 @@ interface ElementSelectorProps {
   onElementSelect: (element: Element) => void
   elements?: Element[]
   className?: string
+  initialSelected?: Element[]
+  initialTab?: 'character' | 'location' | 'item'
 }
 
-export function ElementSelector({ onElementSelect, elements, className }: ElementSelectorProps) {
+export function ElementSelector({ onElementSelect, elements, className, initialSelected, initialTab }: ElementSelectorProps) {
   const [activeTab, setActiveTab] = useState<'character' | 'location' | 'item'>('character')
-  const [selectedElements, setSelectedElements] = useState<Element[]>([])
+  const [selectedElements, setSelectedElements] = useState<Element[]>(initialSelected || [])
 
   const handleElementClick = (element: Element) => {
     setSelectedElements((prev) => [...prev, element])
