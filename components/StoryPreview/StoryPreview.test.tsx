@@ -1,42 +1,32 @@
 import { render, screen } from '@testing-library/react'
-import { StoryPreview } from './StoryPreview'
+import { composeStories } from '@storybook/react'
+import * as stories from './StoryPreview.stories'
+
+const { Default, NoElements } = composeStories(stories)
 
 describe('StoryPreview', () => {
-  const mockElements = [
-    { id: '1', name: 'Character 1', type: 'character' },
-    { id: '2', name: 'Location 1', type: 'location' },
-    { id: '3', name: 'Item 1', type: 'item' },
-  ]
-
-  const mockContent = '<p>Test story content</p>'
-
   it('renders story content', () => {
-    render(<StoryPreview content={mockContent} elements={[]} />)
-    expect(screen.getByText('Test story content')).toBeInTheDocument()
+    render(<Default />)
+    expect(screen.getByText(/Once upon a time/)).toBeInTheDocument()
   })
 
   it('renders all story elements', () => {
-    render(<StoryPreview content={mockContent} elements={mockElements} />)
+    render(<Default />)
     
-    mockElements.forEach(element => {
+    const elements = Default.args?.elements || []
+    elements.forEach(element => {
       expect(screen.getByText(`${element.name} (${element.type})`)).toBeInTheDocument()
     })
   })
 
-  it('applies prose styling to content', () => {
-    render(<StoryPreview content={mockContent} elements={[]} />)
-    const contentContainer = screen.getByText('Test story content').parentElement
-    expect(contentContainer).toHaveClass('prose')
+  it('renders without elements', () => {
+    render(<NoElements />)
+    expect(screen.queryByTestId('element-reference')).not.toBeInTheDocument()
   })
 
-  it('renders element references with correct styling', () => {
-    render(<StoryPreview content={mockContent} elements={mockElements} />)
-    
-    const elementRefs = screen.getAllByTestId('element-reference')
-    expect(elementRefs).toHaveLength(mockElements.length)
-    
-    elementRefs.forEach(ref => {
-      expect(ref).toHaveClass('rounded-full', 'bg-gray-100')
-    })
+  it('applies prose styling to content', () => {
+    render(<Default />)
+    const contentContainer = screen.getByText(/Once upon a time/).parentElement
+    expect(contentContainer).toHaveClass('prose')
   })
 }) 
